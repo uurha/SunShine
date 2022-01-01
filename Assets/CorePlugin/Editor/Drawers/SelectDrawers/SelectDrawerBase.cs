@@ -31,7 +31,8 @@ namespace CorePlugin.Editor.Drawers.SelectDrawers
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             if (property.propertyType != SerializedPropertyType.ManagedReference) return;
-            LazyGetAllInheritedType(fieldInfo.FieldType);
+            var att = (T)attribute;
+            LazyGetAllInheritedType(att.GetFieldType() ?? fieldInfo.FieldType);
             var popupPosition = GetPopupPosition(position);
 
             var typePopupNameArray =

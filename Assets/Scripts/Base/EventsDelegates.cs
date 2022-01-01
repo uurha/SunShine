@@ -2,6 +2,6 @@
 {
     public class SettingsEvents
     {
-        public delegate void CharacterSettings();
+        public delegate void CharacterSettings<in T>(T data);
     }
 }

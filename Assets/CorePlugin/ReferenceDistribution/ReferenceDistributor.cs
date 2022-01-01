@@ -38,19 +38,12 @@ namespace CorePlugin.ReferenceDistribution
         private static ReferenceDistributor _instance;
         private static readonly string[] WarningCallers = { "Awake", "OnEnable" };
 
-        /// <summary>
-        /// Finding reference if passed parameter is null.
-        /// Use this if you need reference not in Start() and/or reference should be received in some event
-        /// </summary>
-        /// <param name="reference"></param>
-        /// <param name="callerName"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static bool AskReference<T>(ref T reference, [CallerMemberName] string callerName = "") where T : MonoBehaviour, IDistributingReference
+        public static bool TryGetReference<T>(out T reference, [CallerMemberName] string callerName = "")
+            where T : IDistributingReference
         {
             ValidateCaller(callerName);
-            reference ??= GetReference<T>();
-            return ReferenceEquals(reference, null);
+            reference = !_instance._isInitialized ? default : _instance._distributingReferences.OfType<T>().FirstOrDefault();
+            return reference != null;
         }
 
         /// <summary>
@@ -58,43 +51,10 @@ namespace CorePlugin.ReferenceDistribution
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T GetInterfaceReference<T>([CallerMemberName] string callerName = "") where T : IDistributingReference
+        public static T GetReference<T>([CallerMemberName] string callerName = "") where T : IDistributingReference
         {
             ValidateCaller(callerName);
-            return _instance._isInitialized ? _instance._distributingReferences.OfType<T>().First() : default;
-        }
-
-        /// <summary>
-        /// Getting reference by type from list
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static IEnumerable<T> GetInterfaceReferences<T>([CallerMemberName] string callerName = "") where T : IDistributingReference
-        {
-            ValidateCaller(callerName);
-            return _instance._isInitialized ? _instance._distributingReferences.OfType<T>() : default;
-        }
-
-        /// <summary>
-        /// Getting reference by type from list
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static T GetReference<T>([CallerMemberName] string callerName = "") where T : MonoBehaviour, IDistributingReference
-        {
-            ValidateCaller(callerName);
-            return _instance._isInitialized ? _instance._distributingReferences.OfType<T>().First() : null;
-        }
-
-        /// <summary>
-        /// Getting references by type from list
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static IEnumerable<T> GetReferences<T>([CallerMemberName] string callerName = "") where T : MonoBehaviour, IDistributingReference
-        {
-            ValidateCaller(callerName);
-            return _instance._isInitialized ? _instance._distributingReferences.OfType<T>() : null;
+            return !_instance._isInitialized ? default : _instance._distributingReferences.OfType<T>().FirstOrDefault();
         }
 
         /// <summary>

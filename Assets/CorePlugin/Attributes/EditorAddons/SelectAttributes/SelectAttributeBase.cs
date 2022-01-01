@@ -24,7 +24,18 @@ namespace CorePlugin.Attributes.EditorAddons.SelectAttributes
     [AttributeUsage(AttributeTargets.Field)]
     public abstract class SelectAttributeBase : PropertyAttribute
     {
+        private Type m_type;
 
+        public SelectAttributeBase(Type type)
+        {
+            m_type = type;
+        }
+
+        public Type GetFieldType()
+        {
+            return m_type;
+        }
+        
         public SelectAttributeBase()
         {
         }

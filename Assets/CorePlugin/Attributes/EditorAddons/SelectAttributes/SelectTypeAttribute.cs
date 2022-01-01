@@ -27,7 +27,11 @@ namespace CorePlugin.Attributes.EditorAddons.SelectAttributes
     [AttributeUsage(AttributeTargets.Field)]
     public class SelectTypeAttribute : SelectAttributeBase
     {
-        public SelectTypeAttribute(Type type) : base()
+        public SelectTypeAttribute(Type type) : base(type)
+        {
+        }
+        
+        public SelectTypeAttribute() : base()
         {
         }
     }

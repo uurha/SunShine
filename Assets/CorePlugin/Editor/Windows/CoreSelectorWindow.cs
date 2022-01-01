@@ -57,10 +57,12 @@ namespace CorePlugin.Editor.Windows
         {
             if (_displayObject == null) return;
             var menu = new GenericMenu();
+            var showObjectContent = new GUIContent($"Show {_displayObject.PrettyEditorObjectName(SelectorWindowExtensions.StringsToRemove)} Object");
 
-            menu.AddItem(new GUIContent($"Show {_displayObject.PrettyEditorObjectName(SelectorWindowExtensions.StringsToRemove)}"), false,
+            menu.AddItem(showObjectContent, false,
                          () => ShowObject(_displayObject));
-            menu.AddItem(new GUIContent(EditScript), false, () => OpenScript(_displayObject));
+            var editScriptContent = new GUIContent(EditScript);
+            menu.AddItem(editScriptContent, false, () => OpenScript(_displayObject));
             menu.DropDown(rect);
         }
 
