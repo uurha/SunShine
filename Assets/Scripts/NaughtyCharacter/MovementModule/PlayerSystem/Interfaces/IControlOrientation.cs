@@ -13,10 +13,25 @@ namespace NaughtyCharacter.MovementModule.PlayerSystem.Interfaces
         
         public void SetRotationClampFunction(Func<Vector2, Vector2> clampFunction);
 
-        public Vector3 GetMovementInput();
+        public InputAnalyzedData GetAnalyzedData();
+        
+        public readonly struct InputAnalyzedData
+        {
+            public InputAnalyzedData(Vector2 rotationInput, Vector3 movementInput, bool jumpInput, bool crouchInput,
+                                     bool sprintInput)
+            {
+                RotationInput = rotationInput;
+                MovementInput = movementInput;
+                JumpInput = jumpInput;
+                CrouchInput = crouchInput;
+                SprintInput = sprintInput;
+            }
 
-        public Vector2 GetRotationInput();
-
-        public bool GetJumpInput();
+            public Vector2 RotationInput { get; } // X (Pitch), Y (Yaw)
+            public Vector3 MovementInput { get; }
+            public bool JumpInput { get; }
+            public bool CrouchInput { get; }
+            public bool SprintInput { get; }
+        }
     }
 }

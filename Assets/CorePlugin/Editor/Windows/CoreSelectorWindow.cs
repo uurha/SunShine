@@ -90,15 +90,16 @@ namespace CorePlugin.Editor.Windows
         private void OnGUI()
         {
             if (_cores.Count <= 0) return;
-            var bufferTab = _mainTab;
+            var bufferMainTab = _mainTab;
             var columnCount = Mathf.RoundToInt(position.width / 200);
 
             _mainTab = UnityEditorExtension.SelectionGrid(_mainTab, _cores.Select(x => x.NamedObject.Name).ToArray(),
                                                           columnCount,
                                                           new GUIStyle(GUI.skin.button) { stretchWidth = true });
 
-            if (_mainTab != bufferTab)
+            if (_mainTab != bufferMainTab)
             {
+                ClearEmbeddedInspector();
                 _subTab = -1;
                 SetTabIndexes();
             }
@@ -115,24 +116,38 @@ namespace CorePlugin.Editor.Windows
                                                fontStyle = FontStyle.BoldAndItalic
                                            });
 
+            var bufferSubTab = _subTab;
             _subTab = UnityEditorExtension.SelectionGrid(_subTab, key.NamedObjects.Select(x => x.Name).ToArray(),
                                                          columnCount,
                                                          new GUIStyle(GUI.skin.button) { stretchWidth = true });
             if (_subTab >= key.Value.Count) return;
+
+            if (_subTab != bufferSubTab)
+            {
+                ClearEmbeddedInspector();
+            }
 
             if (_subTab != -1)
             {
                 bufferObject = key.Value[_subTab].Object;
                 SetTabIndexes();
             }
+            
             EditorGUILayout.Separator();
 
             EditorGUILayout.BeginFoldoutHeaderGroup(true, $"{bufferObject.PrettyTypeName()} (Script)", null,
                                                     GenerateMenu);
             EditorGUILayout.EndFoldoutHeaderGroup();
-            _displayObject = bufferObject;
             RecycleInspector(bufferObject);
+            _displayObject = bufferObject;
             _embeddedInspector.OnInspectorGUI();
+        }
+
+        private void ClearEmbeddedInspector()
+        {
+            if (_embeddedInspector == null) return;
+            DestroyImmediate(_embeddedInspector);
+            _embeddedInspector = null;
         }
 
         private void OnPlayModeStateChanged(PlayModeStateChange obj)
@@ -188,8 +203,7 @@ namespace CorePlugin.Editor.Windows
 
         private void RecycleInspector(Object target)
         {
-            if (_embeddedInspector != null) DestroyImmediate(_embeddedInspector);
-            _embeddedInspector = UnityEditor.Editor.CreateEditor(target);
+            _embeddedInspector ??= UnityEditor.Editor.CreateEditor(target);
         }
 
         private void ResetIndexes()

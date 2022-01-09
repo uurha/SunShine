@@ -423,8 +423,8 @@ Light:
     m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NormalBias: 0
+    m_NearPlane: 0.1
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -608,6 +608,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -69329247470261219, guid: 848de17a3252aca4a87a6b8373d6a87b, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 532353430185218743, guid: 848de17a3252aca4a87a6b8373d6a87b, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -616,9 +620,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Arch
       objectReference: {fileID: 0}
+    - target: {fileID: 1329805291581952285, guid: 848de17a3252aca4a87a6b8373d6a87b, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554165439090077096, guid: 848de17a3252aca4a87a6b8373d6a87b, type: 3}
+      propertyPath: m_Layer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 6320123631827709662, guid: 848de17a3252aca4a87a6b8373d6a87b, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6870614540055640066, guid: 848de17a3252aca4a87a6b8373d6a87b, type: 3}
+      propertyPath: m_Layer
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7096532036476961074, guid: 848de17a3252aca4a87a6b8373d6a87b, type: 3}
       propertyPath: m_Enabled
@@ -711,6 +727,58 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4704389656857717249, guid: 848de17a3252aca4a87a6b8373d6a87b, type: 3}
+--- !u!114 &1355542910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355542902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af332a080fb04eb3b01d70a516de7aa3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  environmentPreset: {fileID: 11400000, guid: 470cc49e1179e7f4e8f9d2e419056a30, type: 2}
+--- !u!114 &1355542911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355542903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af332a080fb04eb3b01d70a516de7aa3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  environmentPreset: {fileID: 11400000, guid: 470cc49e1179e7f4e8f9d2e419056a30, type: 2}
+--- !u!114 &1355542912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355542904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af332a080fb04eb3b01d70a516de7aa3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  environmentPreset: {fileID: 11400000, guid: 470cc49e1179e7f4e8f9d2e419056a30, type: 2}
+--- !u!114 &1355542913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355542905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af332a080fb04eb3b01d70a516de7aa3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  environmentPreset: {fileID: 11400000, guid: 470cc49e1179e7f4e8f9d2e419056a30, type: 2}
 --- !u!114 &1413967633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -875,6 +943,40 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: aab1ef16-fd10-44b3-9b3a-298c74a6e058
     m_ActionName: Player/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1958154249}
+        m_TargetAssemblyTypeName: NaughtyCharacter.Helpers.PlayerInputComponent,
+          Assembly-CSharp
+        m_MethodName: OnSprintEvent
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: c10f66f9-1e3d-40e5-aad7-b64ab4fa8a1a
+    m_ActionName: Player/Sprint[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1958154249}
+        m_TargetAssemblyTypeName: NaughtyCharacter.Helpers.PlayerInputComponent,
+          Assembly-CSharp
+        m_MethodName: OnCrouchEvent
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e5f01a66-37b0-4ba9-82c6-bfe0b8e67666
+    m_ActionName: Player/Crouch[/Keyboard/leftCtrl]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -912,7 +1014,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20686
+  m_Name: pb_Mesh20776
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

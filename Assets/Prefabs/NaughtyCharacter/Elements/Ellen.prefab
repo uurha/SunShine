@@ -830,6 +830,55 @@ Transform:
   m_Father: {fileID: 3528690325257773715}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2635658076597012230
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 430669180907585575}
+  - component: {fileID: 7833645669618415525}
+  m_Layer: 3
+  m_Name: LiquidChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &430669180907585575
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2635658076597012230}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.905, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3902157398716559074}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7833645669618415525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2635658076597012230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fad52470381f8084badf6f5936fb3884, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  character: {fileID: 6056266156059210567}
+  defaultPreset: {fileID: 11400000, guid: ef0ea7765917cf74595b49a8b8f2dc64, type: 2}
+  checkSize: 0.16
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 16
 --- !u!1 &2696275242279708346
 GameObject:
   m_ObjectHideFlags: 0
@@ -3429,6 +3478,7 @@ Transform:
   m_Children:
   - {fileID: 4536890369993909251}
   - {fileID: 1627239132964332874}
+  - {fileID: 430669180907585575}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3482,6 +3532,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerAnimator: {fileID: 6073199023300449882}
+  characterController: {fileID: 4215047323344438979}
   playerCamera:
     id: 0
   movementEnvironment:
@@ -3498,14 +3549,14 @@ MonoBehaviour:
         rotationSpeed: 25
         positionSmoothDamp: 0.025
     00000001:
-      type: {class: GroundMovement, ns: NaughtyCharacter.MovementModule.EnvironmentSystem.Interfaces, asm: Assembly-CSharp}
+      type: {class: GroundMovement, ns: NaughtyCharacter.MovementModule.EnvironmentSystem, asm: Assembly-CSharp}
     00000002:
       type: {class: DefaultInputAnalyzer, ns: NaughtyCharacter.MovementModule.PlayerSystem, asm: Assembly-CSharp}
       data:
         verticalRotationSensitivity: 0.5
         horizontalRotationSensitivity: 0.5
     00000003:
-      type: {class: CharacterAnimator, ns: NaughtyCharacter.CharacterSystem, asm: Assembly-CSharp}
+      type: {class: GroundAnimator, ns: NaughtyCharacter.AnimationSystem, asm: Assembly-CSharp}
 --- !u!1 &9029171360561855646
 GameObject:
   m_ObjectHideFlags: 0

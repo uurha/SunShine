@@ -3,7 +3,7 @@ using Base;
 using CorePlugin.Attributes.EditorAddons;
 using CorePlugin.Cross.Events.Interface;
 using CorePlugin.Extensions;
-using NaughtyCharacter.CharacterSettingsModel;
+using NaughtyCharacter.CharacterSystem.Models;
 using UnityEngine;
 
 namespace SettingsModule.CharacterSettings
@@ -12,12 +12,12 @@ namespace SettingsModule.CharacterSettings
     public class CharacterInternalSettings : MonoBehaviour, IEventHandler
     {
         [SerializeField] private GravitySettings gravitySettings;
-        [SerializeField] private GroundSettings groundSettings;
+        [SerializeField] private EnvironmentSettings environmentSettings;
         [SerializeField] private MovementSettings movementSettings;
         [SerializeField] private RotationSettings rotationSettings;
 
         private event SettingsEvents.CharacterSettings<GravitySettings> OnGravitySettingsChanged;
-        private event SettingsEvents.CharacterSettings<GroundSettings> OnGroundSettingsChanged;
+        private event SettingsEvents.CharacterSettings<EnvironmentSettings> OnGroundSettingsChanged;
         private event SettingsEvents.CharacterSettings<MovementSettings> OnMovementSettingsChanged;
         private event SettingsEvents.CharacterSettings<RotationSettings> OnRotationSettingsChanged;
 
@@ -25,7 +25,7 @@ namespace SettingsModule.CharacterSettings
         public void InvokeEvents()
         {
             OnGravitySettingsChanged?.Invoke(gravitySettings.Copy());
-            OnGroundSettingsChanged?.Invoke(groundSettings.Copy());
+            OnGroundSettingsChanged?.Invoke(environmentSettings.Copy());
             OnMovementSettingsChanged?.Invoke(movementSettings.Copy());
             OnRotationSettingsChanged?.Invoke(rotationSettings.Copy());
         }

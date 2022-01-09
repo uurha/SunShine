@@ -1,10 +1,11 @@
 ﻿using System;
 using CorePlugin.Logger;
+using CorePlugin.ReferenceDistribution.Interface;
 using UnityEngine;
 
 namespace Base
 {
-    public abstract class TransformProvider : MonoBehaviour, IProvider<Transform>
+    public abstract class TransformProvider : MonoBehaviour, IProvider<Transform>, IDistributingReference
     {
         [SerializeField] private Transform provided;
         public Transform Provided => provided;

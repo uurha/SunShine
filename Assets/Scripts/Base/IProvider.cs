@@ -2,7 +2,7 @@
 
 namespace Base
 {
-    public interface IProvider<out T> : IDistributingReference
+    public interface IProvider<out T>
     {
         public T Provided { get; }
     }

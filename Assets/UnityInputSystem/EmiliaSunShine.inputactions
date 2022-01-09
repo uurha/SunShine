@@ -38,9 +38,17 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Sprint",
+                    "name": "Spring",
                     "type": "Button",
                     "id": "c10f66f9-1e3d-40e5-aad7-b64ab4fa8a1a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Crouch",
+                    "type": "Button",
+                    "id": "e5f01a66-37b0-4ba9-82c6-bfe0b8e67666",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -296,7 +304,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Sprint",
+                    "action": "Spring",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -307,7 +315,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Sprint",
+                    "action": "Spring",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fa60a211-7e68-49cf-8ea0-c63190d9e175",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d365d434-332b-4b79-9375-c05853977d8d",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

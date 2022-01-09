@@ -1,5 +1,4 @@
 using System;
-using CorePlugin.Logger;
 using NaughtyCharacter.MovementModule.CameraSystem.Interfaces;
 using UnityEngine;
 
@@ -10,6 +9,7 @@ namespace NaughtyCharacter.MovementModule.CameraSystem
     {
         [Tooltip("How fast the camera rotates around the pivot. Value <= 0 are interpreted as instant rotation")]
         [SerializeField] private float rotationSpeed = 25f;
+
         [SerializeField] private float positionSmoothDamp = 0.025f;
 
         /// <summary>
@@ -26,19 +26,11 @@ namespace NaughtyCharacter.MovementModule.CameraSystem
 
         public void Inject(ICameraRigProvider reference)
         {
-            if (reference == null)
-            {
-                DebugLogger.LogException(new NullReferenceException($"{nameof(ICameraRigProvider)} missing in scene"));
-            }
             _rig = reference;
         }
 
         public void Inject(ICameraPivotProvider reference)
         {
-            if (reference == null)
-            {
-                DebugLogger.LogException(new NullReferenceException($"{nameof(ICameraPivotProvider)} missing in scene"));
-            }
             _pivot = reference;
         }
 

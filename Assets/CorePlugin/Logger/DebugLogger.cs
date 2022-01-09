@@ -45,6 +45,18 @@ namespace CorePlugin.Logger
         {
             Debug.Log(message, context);
         }
+        
+        [Conditional(EditorDefinition.Debug)] [Conditional(EditorDefinition.EnableReleaseLogs)]
+        public static void Log(object obj)
+        {
+            Debug.Log(obj);
+        }
+
+        [Conditional(EditorDefinition.Debug)] [Conditional(EditorDefinition.EnableReleaseLogs)]
+        public static void Log(object obj, Object context)
+        {
+            Debug.Log(obj, context);
+        }
 
         [Conditional(EditorDefinition.Debug)] [Conditional(EditorDefinition.EnableReleaseLogs)]
         public static void LogError(string message)

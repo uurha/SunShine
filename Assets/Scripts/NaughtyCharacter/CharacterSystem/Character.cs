@@ -4,11 +4,12 @@ using Base.Inject;
 using CorePlugin.Attributes.EditorAddons;
 using CorePlugin.Attributes.EditorAddons.SelectAttributes;
 using CorePlugin.Cross.Events.Interface;
-using CorePlugin.Cross.SceneData;
-using NaughtyCharacter.CharacterSettingsModel;
-using NaughtyCharacter.Helpers;
+using NaughtyCharacter.AnimationSystem;
+using NaughtyCharacter.AnimationSystem.Interfaces;
+using NaughtyCharacter.CharacterSystem.Models;
 using NaughtyCharacter.MovementModule.CameraSystem;
 using NaughtyCharacter.MovementModule.CameraSystem.Interfaces;
+using NaughtyCharacter.MovementModule.EnvironmentSystem;
 using NaughtyCharacter.MovementModule.EnvironmentSystem.Interfaces;
 using NaughtyCharacter.MovementModule.PlayerSystem;
 using NaughtyCharacter.MovementModule.PlayerSystem.Interfaces;
@@ -22,6 +23,7 @@ namespace NaughtyCharacter.CharacterSystem
     public class Character : MonoBehaviour, IEventSubscriber
     {
         [SerializeField] private Animator playerAnimator;
+        [SerializeField] private CharacterController characterController;
 
         [SerializeReference] [SelectImplementation]
         private ICameraMovement playerCamera;
@@ -35,93 +37,124 @@ namespace NaughtyCharacter.CharacterSystem
         [SerializeReference] [SelectImplementation]
         private ICharacterAnimator characterAnimator;
 
-        private CharacterController _characterController;
-
-        private Data _data;
         private Transform _transform;
+        private IInputAnalyzer.InputAnalyzedData _analyzedInputData;
+        private RotationSettings _rotationSettings;
+        private MovementSettings _movementSettings;
+        private EnvironmentSettings _environmentSettings;
+        private GravitySettings _gravitySettings;
 
-        public readonly struct Data
+        public readonly struct CharacterData
         {
+            public Vector3 Position { get; }
+            public Quaternion Rotation { get; }
             public Vector3 Velocity { get; }
             public Vector3 HorizontalVelocity { get; }
             public Vector3 VerticalVelocity { get; }
-            public bool IsGrounded { get; }
 
-            public Data(CharacterController character, bool isGrounded)
+            public CharacterData(CharacterController character)
             {
                 var velocity = character.velocity;
                 Velocity = velocity;
-                IsGrounded = isGrounded;
                 HorizontalVelocity = velocity.SetY(0.0f);
                 VerticalVelocity = Vector3.Scale(velocity, Vector3.up);
+                var characterTransform = character.transform;
+                Position = characterTransform.position;
+                Rotation = characterTransform.rotation;
             }
+        }
+
+        private void SetReferences()
+        {
+            characterController = GetComponent<CharacterController>();
         }
 
         private void Awake()
         {
             _transform = transform;
-            _characterController = GetComponent<CharacterController>();
+            SetReferences();
+            SetCharacterAnimator(new GroundAnimator());
+            SetEnvironment(new GroundMovement());
             playerCamera ??= new CameraMovement();
-            characterAnimator ??= new CharacterAnimator();
-            movementEnvironment ??= new GroundMovement();
+            inputAnalyzer ??= new DefaultInputAnalyzer();
         }
 
         private void Start()
         {
-            _data = new Data(_characterController, true);
-            movementEnvironment.Initialize();
+            Initialize();
             inputAnalyzer.Inject();
-            inputAnalyzer.SetRotationClampFunction(movementEnvironment.ClampRotationFunc);
-            inputAnalyzer.SetMovementClampFunction(movementEnvironment.ClampMovementFunc);
-            characterAnimator.Inject(playerAnimator);
             playerCamera.Inject<ICameraPivotProvider>();
             playerCamera.Inject<ICameraRigProvider>();
+        }
+
+        private void Initialize()
+        {
+            InitializeMovementEnvironment();
+            InitializeCharacterAnimator();
+        }
+
+        private void InitializeMovementEnvironment()
+        {
+            movementEnvironment.Inject(_movementSettings);
+            movementEnvironment.Inject(_rotationSettings);
+            movementEnvironment.Inject(_environmentSettings);
+            movementEnvironment.Inject(_gravitySettings);
+            movementEnvironment.Initialize();
+            inputAnalyzer.SetRotationClampFunction(movementEnvironment.ClampRotationFunc);
+            inputAnalyzer.SetMovementClampFunction(movementEnvironment.ClampMovementFunc);
+        }
+
+        private void InitializeCharacterAnimator()
+        {
+            characterAnimator.Inject(playerAnimator);
+        }
+
+        private void Reset()
+        {
+            SetReferences();
         }
 
         private void Update()
         {
             inputAnalyzer.OnUpdate();
-
-            movementEnvironment.OnUpdate(inputAnalyzer.GetMovementInput(), inputAnalyzer.GetRotationInput(),
-                                         inputAnalyzer.GetJumpInput());
+            _analyzedInputData = inputAnalyzer.GetAnalyzedData();
+            movementEnvironment.OnUpdate(_analyzedInputData);
         }
 
         private void FixedUpdate()
         {
             Tick();
             playerCamera.SetPosition(_transform.position);
-            playerCamera.SetControlRotation(inputAnalyzer.GetRotationInput());
+            playerCamera.SetControlRotation(_analyzedInputData.RotationInput);
         }
 
         private void Tick()
         {
             movementEnvironment.OnPreMove(Time.deltaTime);
-            _characterController.Move(movementEnvironment.CalculateMove());
+            characterController.Move(movementEnvironment.CalculateMove());
             _transform.rotation = movementEnvironment.CalculateRotation(_transform.rotation);
-            movementEnvironment.OnPostMove(_transform.position);
-            _data = new Data(_characterController, movementEnvironment.IsGrounded);
-            characterAnimator.UpdateState(_data);
+            movementEnvironment.OnPostMove(new CharacterData(characterController));
+            characterAnimator.UpdateState(movementEnvironment.StateProvider);
         }
 
         private void ReceivedSettings(MovementSettings settings)
         {
-            movementEnvironment.Inject(settings);
-            characterAnimator.Inject(settings);
+            _movementSettings = settings;
         }
 
         private void ReceivedSettings(RotationSettings settings)
         {
-            movementEnvironment.Inject(settings);
+            _rotationSettings = settings;
         }
 
-        private void ReceivedSettings(GroundSettings settings)
+        private void ReceivedSettings(EnvironmentSettings settings)
         {
-            movementEnvironment.Inject(settings);
+            _environmentSettings = settings;
         }
 
         private void ReceivedSettings(GravitySettings settings)
         {
-            movementEnvironment.Inject(settings);
+            _gravitySettings = settings;
         }
 
         public Delegate[] GetSubscribers()
@@ -130,9 +163,26 @@ namespace NaughtyCharacter.CharacterSystem
                    {
                        (SettingsEvents.CharacterSettings<MovementSettings>)ReceivedSettings,
                        (SettingsEvents.CharacterSettings<RotationSettings>)ReceivedSettings,
-                       (SettingsEvents.CharacterSettings<GroundSettings>)ReceivedSettings,
+                       (SettingsEvents.CharacterSettings<EnvironmentSettings>)ReceivedSettings,
                        (SettingsEvents.CharacterSettings<GravitySettings>)ReceivedSettings,
                    };
+        }
+
+        public void SetEnvironment(IMovementEnvironment environment)
+        {
+            if (environment == null) return;
+            if (environment.GetType() == movementEnvironment?.GetType()) return;
+            movementEnvironment = environment;
+            InitializeMovementEnvironment();
+        }
+
+        public void SetCharacterAnimator(ICharacterAnimator newCharacterAnimator)
+        {
+            if (newCharacterAnimator == null) return;
+            if (newCharacterAnimator.GetType() == characterAnimator?.GetType()) return;
+            characterAnimator?.Exit();
+            characterAnimator = newCharacterAnimator;
+            InitializeCharacterAnimator();
         }
     }
 }

@@ -12,6 +12,9 @@ namespace NaughtyCharacter.Helpers
 		public Vector2 CameraInput { get; private set; }
 		public bool JumpInput { get; private set; }
 		public bool HasMoveInput { get; private set; }
+		public bool CrouchInput { get; private set; }
+        
+		public bool SprintInput { get; private set; }
 
         public void OnMoveEvent(InputAction.CallbackContext context)
 		{
@@ -27,7 +30,31 @@ namespace NaughtyCharacter.Helpers
 			HasMoveInput = hasMoveInput;
 		}
 
-		public void OnLookEvent(InputAction.CallbackContext context)
+        public void OnCrouchEvent(InputAction.CallbackContext context)
+        {
+            if (context.started || context.performed)
+            {
+                CrouchInput = true;
+            }
+            else if (context.canceled)
+            {
+                CrouchInput = false;
+            }
+        }
+        
+        public void OnSprintEvent(InputAction.CallbackContext context)
+        {
+            if (context.started || context.performed)
+            {
+                SprintInput = true;
+            }
+            else if (context.canceled)
+            {
+                SprintInput = false;
+            }
+        }
+
+        public void OnLookEvent(InputAction.CallbackContext context)
 		{
 			CameraInput = context.ReadValue<Vector2>();
 		}

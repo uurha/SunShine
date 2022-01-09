@@ -47,15 +47,18 @@ MonoBehaviour:
     gravity: 20
     groundedGravity: 5
     maxFallSpeed: 40
-  groundSettings:
-    groundLayers:
+  environmentSettings:
+    checkLayer:
       serializedVersion: 2
-      m_Bits: 1
+      m_Bits: 17
     sphereCastRadius: 0.35
     sphereCastDistance: 0.15
+    environmentDensity: 0.2
   movementSettings:
     acceleration: 25
+    sprintAcceleration: 40
     deceleration: 25
+    crouchDeceleration: 10
     maxHorizontalSpeed: 8
     jumpSpeed: 10
     jumpAbortSpeed: 10
