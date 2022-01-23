@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using NaughtyCharacter.AnimationSystem;
 using NaughtyCharacter.CharacterSystem;
 using NaughtyCharacter.MovementModule.EnvironmentSystem.Interfaces;
+using NaughtyCharacter.MovementModule.EnvironmentSystem.Models;
 using NaughtyCharacter.MovementModule.PlayerSystem.Interfaces;
 using UnityEngine;
 
@@ -11,7 +14,6 @@ namespace NaughtyCharacter.MovementModule.EnvironmentSystem
     public class LiquidMovement : MovementEnvironment
     {
         private bool _isSwimming = true;
-        private bool _crouchInput;
 
         public override void Initialize()
         {
@@ -20,10 +22,10 @@ namespace NaughtyCharacter.MovementModule.EnvironmentSystem
             _animatorStateProvider.SetState<BooleanState>(CharacterAnimatorParamId.IsGrounded, false);
         }
 
-        public override void OnUpdate(IInputAnalyzer.InputAnalyzedData data)
+        public override EnvironmentTransferState GetTransferState()
         {
-            base.OnUpdate(data);
-            _crouchInput = _analyzedInputData.CrouchInput;
+            var verticalSpeed = _movementSettings.JumpSpeed;
+            return new EnvironmentTransferState(verticalSpeed, _horizontalSpeed, _analyzedInputData);
         }
 
         private protected override void UpdateHorizontalSpeed(float deltaTime)
@@ -36,7 +38,9 @@ namespace NaughtyCharacter.MovementModule.EnvironmentSystem
             }
             _targetHorizontalSpeed = movementInput.magnitude * _movementSettings.MaxHorizontalSpeed;
             var acceleration = _hasMovementInput ? _movementSettings.Acceleration : _movementSettings.Deceleration;
-            _horizontalSpeed = Mathf.MoveTowards(_horizontalSpeed, _targetHorizontalSpeed, acceleration * deltaTime);
+
+            _horizontalSpeed =
+                Mathf.MoveTowards(_horizontalSpeed, _targetHorizontalSpeed, acceleration * deltaTime);
         }
 
         private protected override void SetMovementInput(Vector3 movementInput)
@@ -53,11 +57,11 @@ namespace NaughtyCharacter.MovementModule.EnvironmentSystem
 
         private protected override void UpdateVerticalSpeed(float deltaTime)
         {
-            if (_jumpInput)
+            if (_analyzedInputData.JumpInput)
             {
                 _verticalSpeed = _movementSettings.JumpSpeed;
             }
-            else if (_crouchInput)
+            else if (_analyzedInputData.CrouchInput)
             {
                 _verticalSpeed = -_movementSettings.JumpSpeed;
             }

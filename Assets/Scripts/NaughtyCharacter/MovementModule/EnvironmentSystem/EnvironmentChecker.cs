@@ -1,3 +1,4 @@
+using System;
 using Base;
 using Base.Extensions;
 using CorePlugin.Attributes.EditorAddons;
@@ -18,6 +19,11 @@ namespace NaughtyCharacter.MovementModule.EnvironmentSystem
         private readonly Collider[] _results = new Collider[1];
         private EnvironmentPreset _currentLiquidPreset;
 
+        private void Awake()
+        {
+            character.Set(defaultPreset);
+        }
+
         private void FixedUpdate()
         {
             var size = Physics.OverlapSphereNonAlloc(transform.position, checkSize, _results, layerMask, QueryTriggerInteraction.Collide);
@@ -31,14 +37,12 @@ namespace NaughtyCharacter.MovementModule.EnvironmentSystem
             if (hit)
             {
                 if(_isHit) return;
-                character.SetEnvironment(_currentLiquidPreset.Environment);
-                character.SetCharacterAnimator(_currentLiquidPreset.CharacterAnimator);
+                character.Set(_currentLiquidPreset);
             }
             else
             {
                 if(!_isHit) return;
-                character.SetEnvironment(defaultPreset.Environment);
-                character.SetCharacterAnimator(defaultPreset.CharacterAnimator);
+                character.Set(defaultPreset);
                 _results[0] = null;
                 _currentLiquidPreset = null;
             }

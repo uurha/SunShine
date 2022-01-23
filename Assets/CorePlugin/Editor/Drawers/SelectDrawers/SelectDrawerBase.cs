@@ -24,7 +24,7 @@ namespace CorePlugin.Editor.Drawers.SelectDrawers
 {
     public abstract class SelectDrawerBase<T> : PropertyDrawer where T : SelectAttributeBase
     {
-        private bool _initializeFold;
+        private protected bool _initializeFold;
 
         private protected List<Type> _reflectionType;
 
@@ -44,7 +44,7 @@ namespace CorePlugin.Editor.Drawers.SelectDrawers
                                                        : $"{type.Assembly.ToString().Split(',')[0]} {type.FullName}")
                                    .ToArray();
 
-            //Get the type of serialized object 
+            //Get the type of serialized object
             var currentTypeIndex = Array.IndexOf(typeFullNameArray, property.managedReferenceFullTypename);
 
             if (currentTypeIndex <= -1 || currentTypeIndex >= typeFullNameArray.Length)
@@ -64,6 +64,11 @@ namespace CorePlugin.Editor.Drawers.SelectDrawers
             EditorGUI.PropertyField(position, property, label, true);
         }
 
+        private protected virtual string GetManagedReferenceFullTypename(SerializedProperty property)
+        {
+            return property.managedReferenceFullTypename;
+        }
+
         private protected abstract void ValidateType(SerializedProperty property, int selectedTypeIndex, Type currentObjectType);
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
@@ -71,7 +76,7 @@ namespace CorePlugin.Editor.Drawers.SelectDrawers
             return EditorGUI.GetPropertyHeight(property, true);
         }
 
-        private void LazyGetAllInheritedType(Type baseType)
+        private protected void LazyGetAllInheritedType(Type baseType)
         {
             if (_reflectionType != null) return;
 
@@ -82,7 +87,7 @@ namespace CorePlugin.Editor.Drawers.SelectDrawers
             _reflectionType.Insert(0, null);
         }
 
-        private Rect GetPopupPosition(Rect currentPosition)
+        private protected Rect GetPopupPosition(Rect currentPosition)
         {
             var popupPosition = new Rect(currentPosition);
             popupPosition.width -= EditorGUIUtility.labelWidth;

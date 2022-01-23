@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Base;
+using Base.Extensions;
 using Base.Inject;
 using CorePlugin.Attributes.EditorAddons;
 using CorePlugin.Attributes.EditorAddons.SelectAttributes;
@@ -47,6 +50,8 @@ namespace NaughtyCharacter.CharacterSystem
         public readonly struct CharacterData
         {
             public Vector3 Position { get; }
+            public Vector3 Center { get; }
+            public float Radius { get; }
             public Quaternion Rotation { get; }
             public Vector3 Velocity { get; }
             public Vector3 HorizontalVelocity { get; }
@@ -55,6 +60,8 @@ namespace NaughtyCharacter.CharacterSystem
             public CharacterData(CharacterController character)
             {
                 var velocity = character.velocity;
+                Radius = character.radius;
+                Center = character.center;
                 Velocity = velocity;
                 HorizontalVelocity = velocity.SetY(0.0f);
                 VerticalVelocity = Vector3.Scale(velocity, Vector3.up);
@@ -73,8 +80,8 @@ namespace NaughtyCharacter.CharacterSystem
         {
             _transform = transform;
             SetReferences();
-            SetCharacterAnimator(new GroundAnimator());
-            SetEnvironment(new GroundMovement());
+            Set(new GroundAnimator());
+            Set(new GroundMovement());
             playerCamera ??= new CameraMovement();
             inputAnalyzer ??= new DefaultInputAnalyzer();
         }
@@ -137,6 +144,30 @@ namespace NaughtyCharacter.CharacterSystem
             characterAnimator.UpdateState(movementEnvironment.StateProvider);
         }
 
+        private void OnDrawGizmos()
+        {
+            if (_environmentSettings == null) return;
+            var transformPosition = transform.position;
+            var center = characterController.center;
+            var rotation = transform.rotation;
+            var radius = characterController.radius;
+
+            var positions = new Dictionary<Vector3, Vector3>
+                            {
+                                { Vector3.down, transformPosition },
+                                { Vector3.up, transformPosition + center * 2 },
+                                { Vector3.forward, transformPosition + center + rotation * Vector3.forward * radius },
+                                { Vector3.right, transformPosition + center + rotation * Vector3.right * radius },
+                                { Vector3.left, transformPosition + center + rotation * Vector3.left * radius },
+                                { Vector3.back, transformPosition + center + rotation * Vector3.back * radius }
+                            };
+
+            foreach (var position in positions.Values)
+            {
+                GizmoExtensions.DrawGizmoSphere(position, _environmentSettings.SphereCastRadius);
+            }
+        }
+
         private void ReceivedSettings(MovementSettings settings)
         {
             _movementSettings = settings;
@@ -145,11 +176,6 @@ namespace NaughtyCharacter.CharacterSystem
         private void ReceivedSettings(RotationSettings settings)
         {
             _rotationSettings = settings;
-        }
-
-        private void ReceivedSettings(EnvironmentSettings settings)
-        {
-            _environmentSettings = settings;
         }
 
         private void ReceivedSettings(GravitySettings settings)
@@ -163,26 +189,36 @@ namespace NaughtyCharacter.CharacterSystem
                    {
                        (SettingsEvents.CharacterSettings<MovementSettings>)ReceivedSettings,
                        (SettingsEvents.CharacterSettings<RotationSettings>)ReceivedSettings,
-                       (SettingsEvents.CharacterSettings<EnvironmentSettings>)ReceivedSettings,
                        (SettingsEvents.CharacterSettings<GravitySettings>)ReceivedSettings,
                    };
         }
 
-        public void SetEnvironment(IMovementEnvironment environment)
+        public void Set(IMovementEnvironment environment)
         {
             if (environment == null) return;
             if (environment.GetType() == movementEnvironment?.GetType()) return;
+            var oldEnvironment = movementEnvironment;
             movementEnvironment = environment;
             InitializeMovementEnvironment();
+            if (oldEnvironment == null) return;
+            var state = oldEnvironment.GetTransferState();
+            movementEnvironment.OnEnvironmentChanged(state);
         }
 
-        public void SetCharacterAnimator(ICharacterAnimator newCharacterAnimator)
+        public void Set(ICharacterAnimator newCharacterAnimator)
         {
             if (newCharacterAnimator == null) return;
             if (newCharacterAnimator.GetType() == characterAnimator?.GetType()) return;
             characterAnimator?.Exit();
             characterAnimator = newCharacterAnimator;
             InitializeCharacterAnimator();
+        }
+
+        public void Set(EnvironmentSettings environmentSettings)
+        {
+            if (environmentSettings == null) return;
+            _environmentSettings = environmentSettings;
+            movementEnvironment?.Inject(_movementSettings);
         }
     }
 }

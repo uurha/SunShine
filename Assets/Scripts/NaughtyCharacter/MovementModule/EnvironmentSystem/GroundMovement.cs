@@ -2,6 +2,7 @@
 using NaughtyCharacter.AnimationSystem;
 using NaughtyCharacter.CharacterSystem;
 using NaughtyCharacter.MovementModule.EnvironmentSystem.Interfaces;
+using NaughtyCharacter.MovementModule.EnvironmentSystem.Models;
 using UnityEngine;
 
 namespace NaughtyCharacter.MovementModule.EnvironmentSystem
@@ -22,13 +23,13 @@ namespace NaughtyCharacter.MovementModule.EnvironmentSystem
             if (_isGrounded)
             {
                 _verticalSpeed = -_gravitySettings.GroundedGravity;
-                if (!_jumpInput) return;
+                if (!_analyzedInputData.JumpInput) return;
                 _verticalSpeed = _movementSettings.JumpSpeed;
                 _isGrounded = false;
             }
             else
             {
-                if (!_jumpInput &&
+                if (!_analyzedInputData.JumpInput &&
                     _verticalSpeed > 0.0f)
                 {
                     // This is what causes holding jump to jump higher than tapping jump.
@@ -74,7 +75,7 @@ namespace NaughtyCharacter.MovementModule.EnvironmentSystem
             _justWalkedOffEdge = false;
             var isGrounded = CheckGrounded(data.Position);
 
-            if (_isGrounded && !isGrounded && !_jumpInput)
+            if (_isGrounded && !isGrounded && !_analyzedInputData.JumpInput)
             {
                 _justWalkedOffEdge = true;
             }

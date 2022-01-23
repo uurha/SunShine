@@ -977,6 +977,23 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: e5f01a66-37b0-4ba9-82c6-bfe0b8e67666
     m_ActionName: Player/Crouch[/Keyboard/leftCtrl]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1958154249}
+        m_TargetAssemblyTypeName: NaughtyCharacter.Helpers.PlayerInputComponent,
+          Assembly-CSharp
+        m_MethodName: OnDoubleJumpEvent
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 517551d5-eb9f-4238-8713-a284009b4bb2
+    m_ActionName: Player/DoubleJump[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1014,7 +1031,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20776
+  m_Name: pb_Mesh21408
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

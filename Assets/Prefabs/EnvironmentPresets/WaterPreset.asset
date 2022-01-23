@@ -16,6 +16,13 @@ MonoBehaviour:
     id: 0
   characterAnimator:
     id: 1
+  environmentSettings:
+    checkLayer:
+      serializedVersion: 2
+      m_Bits: 16
+    sphereCastRadius: 0.05
+    sphereCastDistance: 0.15
+    environmentDensity: 0.3
   references:
     version: 1
     00000000:

@@ -38,6 +38,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "DoubleJump",
+                    "type": "Button",
+                    "id": "517551d5-eb9f-4238-8713-a284009b4bb2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "MultiTap"
+                },
+                {
                     "name": "Spring",
                     "type": "Button",
                     "id": "c10f66f9-1e3d-40e5-aad7-b64ab4fa8a1a",
@@ -338,6 +346,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bdd4485f-0707-4a9d-8189-47d25a25eea5",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "DoubleJump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "78b6c3da-27f0-42ae-9f73-d0417d475ae7",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "DoubleJump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

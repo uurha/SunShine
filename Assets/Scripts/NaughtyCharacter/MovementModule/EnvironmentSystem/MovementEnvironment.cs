@@ -1,8 +1,10 @@
-﻿using NaughtyCharacter.AnimationSystem;
+﻿using System;
+using NaughtyCharacter.AnimationSystem;
 using NaughtyCharacter.CharacterSystem;
 using NaughtyCharacter.CharacterSystem.Models;
 using NaughtyCharacter.Helpers;
 using NaughtyCharacter.MovementModule.EnvironmentSystem.Interfaces;
+using NaughtyCharacter.MovementModule.EnvironmentSystem.Models;
 using NaughtyCharacter.MovementModule.PlayerSystem.Interfaces;
 using NaughtyCharacter.Utility;
 using UnityEngine;
@@ -34,7 +36,6 @@ namespace NaughtyCharacter.MovementModule.EnvironmentSystem
         private protected Vector3 _movementInput;
         private protected Vector2 _rotationInput;
         private protected bool _hasMovementInput;
-        private protected bool _jumpInput;
 
         private protected Vector3 _lastMovementInput;
         private protected Vector3 _movementVector;
@@ -76,6 +77,19 @@ namespace NaughtyCharacter.MovementModule.EnvironmentSystem
             _animatorStateProvider.SetState<FloatState>(CharacterAnimatorParamId.VerticalSpeed, 0f);
         }
 
+        public virtual EnvironmentTransferState GetTransferState()
+        {
+            return new EnvironmentTransferState(_verticalSpeed, _horizontalSpeed, _analyzedInputData);
+        }
+
+        public virtual void OnEnvironmentChanged(EnvironmentTransferState transferData)
+        {
+            _horizontalSpeed = transferData.HorizontalSpeed;
+            _verticalSpeed = transferData.VerticalSpeed;
+            _analyzedInputData = transferData.AnalyzedInputData;
+            OnUpdate(_analyzedInputData);
+        }
+        
         public virtual void OnPreMove(float deltaTime)
         {
             _deltaTime = deltaTime;
@@ -88,13 +102,12 @@ namespace NaughtyCharacter.MovementModule.EnvironmentSystem
             _analyzedInputData = data;
             SetMovementInput(_analyzedInputData.MovementInput);
             SetRotationInput(_analyzedInputData.RotationInput);
-            _jumpInput = _analyzedInputData.JumpInput;
         }
 
         public virtual Vector3 CalculateMove()
         {
             return _movementVector =
-                       (_horizontalSpeed * GetMovementDirection() + _verticalSpeed * Vector3.up) * _deltaTime;
+                       (_horizontalSpeed * GetMovementDirection() + _verticalSpeed * Vector3.up) * _deltaTime * _environmentSettings.EnvironmentDensity;
         }
 
         private protected virtual Vector3 GetMovementDirection()
@@ -152,7 +165,7 @@ namespace NaughtyCharacter.MovementModule.EnvironmentSystem
         private protected virtual Quaternion OrientToTargetRotation(Vector3 horizontalMovement, Quaternion currentRotation,
                                                   float deltaTime)
         {
-            var targetRotation = Quaternion.identity;
+            var targetRotation = currentRotation;
 
             switch (_rotationSettings.RotationBehavior)
             {

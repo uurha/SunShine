@@ -1,6 +1,7 @@
 ﻿using Base.Inject;
 using NaughtyCharacter.CharacterSystem;
 using NaughtyCharacter.CharacterSystem.Models;
+using NaughtyCharacter.MovementModule.EnvironmentSystem.Models;
 using NaughtyCharacter.MovementModule.PlayerSystem.Interfaces;
 using UnityEngine;
 
@@ -11,6 +12,10 @@ namespace NaughtyCharacter.MovementModule.EnvironmentSystem.Interfaces
                                             IInjectReceiver<MovementSettings>
     {
         public IAnimatorStateProvider<int> StateProvider { get; }
+        
+        public void OnEnvironmentChanged(EnvironmentTransferState transferData);
+
+        public EnvironmentTransferState GetTransferState();
         
         public void Initialize();
 

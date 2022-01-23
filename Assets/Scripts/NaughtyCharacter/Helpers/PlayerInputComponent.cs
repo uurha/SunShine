@@ -11,6 +11,7 @@ namespace NaughtyCharacter.Helpers
 		public Vector2 LastMoveInput { get; private set; }
 		public Vector2 CameraInput { get; private set; }
 		public bool JumpInput { get; private set; }
+		public bool DoubleJumpInput { get; private set; }
 		public bool HasMoveInput { get; private set; }
 		public bool CrouchInput { get; private set; }
         
@@ -28,6 +29,18 @@ namespace NaughtyCharacter.Helpers
 
 			MoveInput = moveInput;
 			HasMoveInput = hasMoveInput;
+		}
+        
+        public void OnDoubleJumpEvent(InputAction.CallbackContext context)
+		{
+            if (context.started || context.performed)
+            {
+                DoubleJumpInput = true;
+            }
+            else if (context.canceled)
+            {
+                DoubleJumpInput = false;
+            }
 		}
 
         public void OnCrouchEvent(InputAction.CallbackContext context)
